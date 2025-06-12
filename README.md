@@ -24,9 +24,13 @@
 1. שכפלי את הרפוזיטורי:
 
 git clone https://github.com/chanaYakobovits/Python-project.git
+
 cd Python-project
+
 pip install -r requirements.txt
+
 python manage.py runserver
+
 הפרויקט פותח כחלק מלימודי הנדסת תוכנה במסגרת מה"ט.
 מפתחת: חני יעקובוביץ
 
