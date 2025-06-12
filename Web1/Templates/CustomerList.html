@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>תיווך דירות</title>
+    <style>
+        body {
+         font-family: Arial, sans-serif;
+         margin: 0;
+         padding: 0;
+          background-color: #e0e0e0 !important;
+     }
+
+
+             h1, h3 {
+                 text-align: center;
+                 margin-top: 20px;
+                 color: #333;
+             }
+
+             .search-form {
+                 display: flex;
+                 justify-content: center;
+                 gap: 20px;
+                 margin: 20px 0;
+             }
+
+             .search-form form {
+                 display: flex;
+                 gap: 10px;
+                 align-items: center;
+             }
+
+             .search-form input, .search-form select, .search-form button {
+                 padding: 10px;
+                 font-size: 16px;
+             }
+
+             .search-form button {
+                 cursor: pointer;
+                 background-color: #4CAF50;
+                 color: white;
+                 border: none;
+                 border-radius: 5px;
+             }
+
+             .search-form button:hover {
+                 background-color: #45a049;
+             }
+
+             .card-container {
+                 display: grid;
+                 grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                 gap: 20px;
+                 margin: 20px;
+             }
+
+             .card {
+                 background-color: white;
+                 border-radius: 8px;
+                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                 overflow: hidden;
+                 transition: transform 0.3s ease;
+             }
+
+             .card img {
+                 width: 100%;
+                 height: 200px;
+                 object-fit: cover;
+             }
+
+             .card-content {
+                 padding: 15px;
+             }
+
+             .card-content h2 {
+                 font-size: 20px;
+                 margin-bottom: 10px;
+                 color: #333;
+             }
+
+             .card-content p {
+                 font-size: 14px;
+                 color: #555;
+                 margin-bottom: 8px;
+             }
+
+             .card-content button {
+                 background-color: #007BFF;
+                 color: white;
+                 padding: 8px 15px;
+                 border: none;
+                 border-radius: 5px;
+                 cursor: pointer;
+                 transition: background-color 0.3s ease;
+             }
+
+             .card-content button:hover {
+                 background-color: #0056b3;
+             }
+
+             .add-apartment-btn {
+                 text-align: center;
+                 margin-top: 10px;
+             }
+
+             .add-apartment-btn button {
+                 padding: 10px 20px;
+                 background-color: #007BFF;
+                 color: white;
+                 border: none;
+                 cursor: pointer;
+                 border-radius: 5px;
+             }
+
+             .add-apartment-btn button:hover {
+                 background-color: #0056b3;
+             }
+
+             form {
+                 max-width: 500px;
+                 margin: 0 auto;
+                 padding: 20px;
+                 background-color: #fff;
+                 border-radius: 8px;
+                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+             }
+
+             form input, form textarea, form button {
+                 width: 100%;
+                 margin-bottom: 10px;
+                 padding: 10px;
+                 font-size: 16px;
+                 border-radius: 5px;
+                 border: 1px solid #ddd;
+             }
+
+             form button {
+                 background-color: #28a745;
+                 color: white;
+                 cursor: pointer;
+             }
+
+             form button:hover {
+                 background-color: #218838;
+             }
+    </style>
+</head>
+<body>
+
+ {% include 'layout.html' %}
+
+<h1>ברוכים הבאים לאתר תיווך דירות</h1>
+
+<div class="search-form">
+    <form method="GET" action="{% url 'CustomerList' %}">
+        <label for="SearchType">בחר סוג חיפוש:</label>
+        <select id="SearchType" name="SearchType">
+            <option value="city" {% if request.GET.SearchType == "city" %}selected{% endif %}>עיר</option>
+            <option value="numberRoom" {% if request.GET.SearchType == "numberRoom" %}selected{% endif %}>מס' חדרים</option>
+            <option value="floor" {% if request.GET.SearchType == "floor" %}selected{% endif %}>קומה</option>
+        </select>
+
+        <label for="Search">חפש:</label>
+        <input type="text" id="Search" name="Search" value="{{ request.GET.Search }}">
+
+        <button type="submit">חפש</button>
+    </form>
+
+    <form method="GET" action="{% url 'CustomerList' %}">
+        <label for="MinSort">המחיר הנמוך</label>
+        <input type="text" id="MinSort" name="MinSort" value="{{ request.GET.MinSort }}">
+        <label for="MaxSort">המחיר הגבוה</label>
+        <input type="text" id="MaxSort" name="MaxSort" value="{{ request.GET.MaxSort }}">
+        <button type="submit">חפש</button>
+    </form>
+</div>
+
+
+<h3>דירות פופולריות</h3>
+
+<div class="card-container">
+    {% for s in apartments %}
+    <div class="card">
+
+        <div class="card-content">
+            {% for img in s.images.all %}
+            <img src="{{ img.url.url }}" alt="Apartment Image">
+
+            {% endfor %}
+
+            <h2>Apartment ID: {{ s.id }}</h2>
+            <p><strong>City:</strong> {{ s.city }}</p>
+            <p><strong>Street:</strong> {{ s.street }}</p>
+            <p><strong>Floor Number:</strong> {{ s.floor }}</p>
+            <p><strong>Number of Rooms:</strong> {{ s.rooms }}</p>
+            <p><strong>price:</strong> {{ s.price }}</p>
+            <p><strong>description:</strong> {{ s.description }}</p>
+            <p><strong>Status:</strong> {{ s.Status }}</p>
+            <p><strong>Seller:</strong> {{ s.seller }}</p>
+            <div class="add-apartment-btn">
+                <button type="button" onclick="toggleForm({{ s.id }})">פניה</button>
+                <form method="POST" action="{% url 'Request' s.id %}" id="requestForm{{ s.id }}" style="display: none;" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    <label for="content">הכנס פניה</label>
+                    <textarea id="content" name="content" required></textarea>
+
+                    <button type="submit">שלח</button>
+                </form>
+            </div>
+            <script>
+                function toggleForm(apartmentId) {
+                    console.log("Form for apartment " + apartmentId + " is toggling.");
+                    const form = document.getElementById('requestForm' + apartmentId);
+                    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+                }
+
+            </script>
+        </div>
+    </div>
+    {% empty %}
+    <p>לא נמצאו דירות.</p>
+    {% endfor %}
+</div>
+
+
+
+</body>
+</html>

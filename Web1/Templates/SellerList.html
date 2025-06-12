@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartment List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #40E0D0; /* תכלת תורכיז */
+            color: #fff;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f0f8ff; /* תכלת */
+        }
+
+        tbody tr:hover {
+            background-color: #e0f7fa; /* תכלת בהיר */
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        button {
+            background-color: #40E0D0; /* תכלת תורכיז */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #e0f7fa; /* תכלת בהיר */
+        }
+
+        a button {
+            text-decoration: none;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+ {% include 'layout.html' %}
+
+<h1>Apartment List</h1>
+<a href="{% url 'Add' %}">
+    <button type="button">Add Apartment</button>
+</a>
+<table>
+    <thead>
+    <tr>
+        <th>City</th>
+        <th>Street</th>
+        <th>Floor</th>
+        <th>Number of Rooms</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Edit</th>
+        <th>Delete</th>
+        <th>Requests</th>
+        <th>Update Buy</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for apartment in apartments %}
+    <tr>
+        <td>{{ apartment.city }}</td>
+        <td>{{ apartment.street }}</td>
+        <td>{{ apartment.floor }}</td>
+        <td>{{ apartment.rooms }}</td>
+        <td>{{ apartment.price }}</td>
+        <td>{{ apartment.status }}</td>
+        <td>
+            <form method="POST" action="{% url 'Update' apartment.id %}">
+                {% csrf_token %}
+                <button type="submit">Edit</button>
+            </form>
+        </td>
+        <td>
+            <a href="{% url 'Delete' apartment.id %}">
+                <button type="button">Delete</button>
+            </a>
+        </td>
+        <td>
+            <a href="{% url 'ShowRequest' apartment.id %}">
+                <button type="button">Show Requests</button>
+            </a>
+        </td>
+        <td>
+            <form method="POST" action="{% url 'UpdateBuy' apartment.id %}">
+                {% csrf_token %}
+                <button type="submit">Update Buy</button>
+            </form>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="10">No apartments available</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
